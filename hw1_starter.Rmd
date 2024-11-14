@@ -136,6 +136,4 @@ plot_cp(dat, est, iso_code = 404, CI = 80)
 
 Create a repo on your GitHub. Commit and push your Rmd and knitted html to your repo. Paste the link to your GitHub repo below.
 
-```{r}
-```
-
+https://github.com/jordynsulliv/new.test 
