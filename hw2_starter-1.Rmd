@@ -140,15 +140,16 @@ roxygen2::roxygenise()
 # Load your package with plot_cp function
 devtools::load_all()
 
-# Load the data
-dat <- read.csv("contraceptive_use.csv")
-est <- read_csv("est.csv")
-# Replicate the plots
 plot_cp(dat, est, iso_code = 4)
 plot_cp(dat, est, iso_code = 4, CI = NA)
 plot_cp(dat, est, iso_code = 404, CI = 80)
 # Document the package
 devtools::document()
+# Install and load Rd2md
+library(Rd2md)
+
+# Display the help file for plot_cp
+as_markdown("man/plot_cp.Rd", outfile = "plot_cp.md")
 
 ```
 
