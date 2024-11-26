@@ -37,7 +37,6 @@ library(testthat)
 library(assertthat)
 library(devtools)
 library(roxygen2)
-roxygen2::roxygenise()
 ```
 
 ```{r}
@@ -49,39 +48,8 @@ dat <- contraceptive_use %>%
     year = round((start_date + end_date) / 2),  
     cp = contraceptive_use_modern * 100 ) %>%
   select(iso = division_numeric_code, year, cp) 
-#' Contraceptive Relavence Rate Over Time
-#'
-#' @param dat A data frame containing observed contraceptive use data with columns:
-#'   `iso` (country code), `year` (reference year), and `cp` (contraceptive use modern %).
-#' @param est A data frame containing estimated contraceptive use data with columns:
-#'   `iso`, `Year`, `Median`, `L95`, `U95`, `L80`, `U80`.
-#' @param iso_code Numeric Value for a country code 
-#' @param CI The confidence interval for the graphs, either 95%, 80% or other.
-#'
-#' @return A ggplot object displaying the contraceptive use over time.
-#' @export
-#'
-#' @examples
-plot_cp <- function(dat, est, iso_code, CI = NULL) {
-  est2 <- est %>% filter(iso == iso_code)
-  dat <- dat %>% filter(iso == iso_code)
-    p <- ggplot(est2, aes(x = Year, y = Median)) +
-    geom_line(color = "blue", size = 1.2) +  
-    geom_point(aes(x = year, y = cp), data = dat, color = "black") + 
-    labs(x = "Time", y = "Modern Use (%)", 
-         title = paste(est2$`Country or area`[1])) +
-    theme_minimal()
-     if (is.null(CI)) {
-    CI <- 95}
-    if (!is.null(CI) && !is.na(CI)) {
-    if (CI == 95) {
-      p <- p + geom_ribbon(aes(ymin = L95, ymax = U95), fill = "darkgrey", alpha = 0.5)  
-    } else if (CI == 80) {
-      p <- p + geom_ribbon(aes(ymin = L80, ymax = U80), fill = "darkgrey", alpha = 0.5)  
-    }
-  }
-  
-  return(p)}
+
+
 ```
 
 # Exercise 1: Function call in R packages
@@ -110,9 +78,11 @@ In this HW2, you should not define the `plot_cp()` in this Rmd. Instead, you sho
 You should be able to replicate the following plots:
 
 ```{r, include = T, warning = F}
+devtools::load_all()
 plot_cp(dat, est, iso_code = 4)
 plot_cp(dat, est, iso_code = 4, CI = NA)
 plot_cp(dat, est, iso_code = 404, CI = 80)
+
 ```
 
 # Exercise 2: Add documentation 
@@ -125,33 +95,12 @@ Document the arguments and output of plot_cp. To do that, add a helpfile (.Rd fi
 In order to show the help file in the knitted Rmd, install the package Rd2md and use this code block:
 
 ```{r}
-devtools::document()
-```
-
-
-```{r}
 library(Rd2md)
 devtools::document()
-devtools::load_all()
-roxygen2::roxygenise()
+Rd2markdown(rdfile = "man/plot_cp.Rd", outfile = "plot_cp.md")
 ```
 
-```{r}
-# Load your package with plot_cp function
-devtools::load_all()
 
-plot_cp(dat, est, iso_code = 4)
-plot_cp(dat, est, iso_code = 4, CI = NA)
-plot_cp(dat, est, iso_code = 404, CI = 80)
-# Document the package
-devtools::document()
-# Install and load Rd2md
-library(Rd2md)
-
-# Display the help file for plot_cp
-as_markdown("man/plot_cp.Rd", outfile = "plot_cp.md")
-
-```
 
 # Exercise 3: GitHub
 
@@ -160,3 +109,5 @@ Now it is time to share your work! Create a repo on your GitHub. Commit and push
 Note that in order to earn full credits, your GitHub repo commit history should show at least two commits.
 
 Paste your link here...
+
+https://github.com/jordynsulliv/new.test/tree/main 
