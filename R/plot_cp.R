@@ -12,7 +12,24 @@
 #'
 #' @examples
 plot_cp <- function(dat, est, iso_code, CI = NULL) {
-  est2 <- est %>% filter(iso == iso_code)
+  if (!all(c("iso", "year", "cp") %in% colnames(dat))) {
+    missing_cols <- c("iso", "year", "cp")[!c("iso", "year", "cp") %in% colnames(dat)]
+    stop(paste("Error: Missing columns in 'dat':", paste(missing_cols, collapse = ", ")))
+  }
+    if (!(iso_code %in% dat$iso)) {
+    stop(paste("Error: iso_code", iso_code, "not found in 'dat'."))
+  }
+  
+  if (!(iso_code %in% est$iso)) {
+    stop(paste("Error: iso_code", iso_code, "not found in 'est'."))
+  }
+    if (!is.numeric(dat$cp)) {
+    stop("Error: 'cp' is not numeric in 'dat'.")
+  }
+    if (!is.null(CI) && !CI %in% c(80, 95, NA)) {
+    stop("Error: CI must be either 80, 95, or NA.")
+  }
+  est <- est %>% filter(iso == iso_code)
   dat <- dat %>% filter(iso == iso_code)
   p <- ggplot(est2, aes(x = Year, y = Median)) +
     geom_line(color = "blue", size = 1.2) +  
@@ -29,5 +46,5 @@ plot_cp <- function(dat, est, iso_code, CI = NULL) {
       p <- p + geom_ribbon(aes(ymin = L80, ymax = U80), fill = "darkgrey", alpha = 0.5)  
     }
   }
-  
-  return(p)}
+  return(p)
+    }
